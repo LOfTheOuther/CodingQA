@@ -2,6 +2,7 @@ package cqa.logic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cqa.domain.Question;
 import cqa.various.StringValidationException;
@@ -12,14 +13,18 @@ public class LogicPart {
 	private List<Question> questions = new ArrayList<Question>();
 
 	public void storeQA(String insertedString) throws StringValidationException {
-		String[] separated = insertedString.split("?");
-		String question = separated[0];
-		if (separated[1].length() == 0 || !separated[1].contains("\"")) {//add control over quantity of " (should be even)
-			throw new StringValidationException(Various.STRING_ERROR.getMessage());//no answer found
+		StringBuffer sb = new StringBuffer(insertedString);
+		int k = sb.indexOf("?");
+		final String questionI = sb.substring(0, k);
+		String answersI = sb.substring(k + 1, insertedString.length());
+		if (!answersI.contains("\"")) {//shoud be even
+			throw new StringValidationException(Various.NO_ANSWER_INSERTED.getMessage());
 		}
 
-		char[] answersCharA = separated[1].toCharArray();
-		//remove all spaces
+		System.out.println("q: " + questionI);
+		System.out.println("a: " + answersI);
+
+		char[] answersCharA = answersI.toCharArray();
 		List<String> answers = new ArrayList<String>();//populate this in a for cycling the array
 		int wordFrom = 0;
 		boolean first = false;
@@ -34,24 +39,21 @@ public class LogicPart {
 				} else if (j == wordFrom + 1) {
 					throw new StringValidationException(Various.STRING_ERROR.getMessage());
 				}
-				answers.add(separated[1].substring(wordFrom, j));
+				answers.add(answersI.substring(wordFrom, j));
 			}
 		}
-
-		questions.add(new Question(question, answers));
+		for (String s : answers) {
+			System.out.println("a :" + s + ":");
+		}
+		questions.add(new Question(questionI, answers));
 	}
 
 	public Question retrieve(String insertedString) {
-		for (Question q : questions) {
-			if (q.getQuestion().equals(insertedString)) {
-				return q;
-			}
-		}
-		return null;
+		return questions.stream().filter(q -> q.getQuestion().equals(insertedString)).collect(Collectors.toList()).get(0);//with null fails TODO
 	}
 
 	public String validateLengthString(String str) {
-		if (str == null) {
+		if (str == null || str.isEmpty()) {
 			return Various.STRING_ERROR.getMessage();
 		}
 		if (str.length() > 255) {

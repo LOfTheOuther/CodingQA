@@ -1,5 +1,7 @@
 package cqa.logic;
 
+import java.util.Scanner;
+
 import cqa.domain.Question;
 import cqa.various.Various;
 
@@ -8,29 +10,29 @@ public class MainClass {
 	public static void main(String[] args) {
 		LogicPart lp = new LogicPart();
 		String insertedString = null;
-
+		System.out.println("To insert use ?");
+		System.out.println("To ask avoid it");
 		System.out.println("To Exit write 'QUIT'.");
+		Scanner in = new Scanner(System.in);
 
 		do {
-			//insert via consolle
-
+			insertedString = in.nextLine();
 			if (Various.QUIT.getMessage().equalsIgnoreCase(insertedString)) {
-
-			}
-
-			String validated = lp.validateLengthString(insertedString);
-
-			if (validated == null) {
-				System.out.println(validated);
 				break;
 			}
 
-			if (insertedString.contains("?")) {
-				//store q and a
+			String validated = lp.validateLengthString(insertedString);
+			if (validated != null) {
+				System.out.println(validated);
+				System.out.println("Retry >>>");
+			}
+
+			if (insertedString.contains("?")) {//|| insertedString.charAt(insertedString.length() - 1) != '?'
 				try {
 					lp.storeQA(insertedString);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
+					System.out.println("Retry >>>");
 				}
 			} else {
 				Question retrieved = lp.retrieve(insertedString);
@@ -40,7 +42,8 @@ public class MainClass {
 					retrieved.prettyPrintMe();
 				}
 			}
-		} while (true);//TODO condition
+		} while (true);
+		in.close();
 	}
 
 }
