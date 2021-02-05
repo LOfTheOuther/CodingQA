@@ -29,7 +29,6 @@ public class Question {
 	}
 
 	public void prettyPrintMe() {
-		System.out.println(question);
 		for (String a : answers) {
 			System.out.println("     " + a);
 		}

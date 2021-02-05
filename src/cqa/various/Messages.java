@@ -6,7 +6,7 @@ public enum Messages {
 	QUESTION_DUPLICATED("Error: This question is already in our system."),
 	QUESTION_NOT_FOUND("Error: Question mark '?' not found."),
 	NO_ANSWER_INSERTED("You need to insert at least one answer."),
-	ANSWER_TO_EVERYTHING("The answer to life, universe and everything is 42");
+	ANSWER_TO_EVERYTHING("The answer to life, universe and everything is 42.");
 
 	private String message;
 

@@ -22,14 +22,13 @@ public class LogicPart {
 		int k = sb.indexOf("?");
 		final String questionI = sb.substring(0, k + 1);
 		validateLengthString(questionI);
-		if (retrieve(questionI) != null) {
-			throw new StringValidationException(Messages.QUESTION_DUPLICATED.getMessage());
-		}
 
 		final String answersI = sb.substring(k + 1, insertedString.length());
 		char[] answersCharA = answersI.toCharArray();
 		if (countHowManyChar(answersCharA) % 2 != 0) {
 			throw new StringValidationException(Messages.STRING_ERROR.getMessage());
+		} else if (retrieve(questionI) != null) {
+			throw new StringValidationException(Messages.QUESTION_DUPLICATED.getMessage());
 		}
 
 		List<String> answers = new ArrayList<String>();
